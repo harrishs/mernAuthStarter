@@ -1,9 +1,8 @@
 import './App.css'
-import Layout from "./Components/Layout";
+import Layout from "./Components/Layout/Layout";
+import Auth from "./Components/Auth/Auth";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
     <Layout/>

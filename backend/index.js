@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const port = process.env.PORT || process.env.PORT;
+const port = process.env.PORT || 8080;
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,5 +15,8 @@ app.use("/auth", authRoutes);
 
 mongoose
 	.connect(process.env.MONGO_URI)
-	.then(() => app.listen(port))
+	.then(() => {
+		console.log("Connected to DB and Server. Listening on port " + port);
+		app.listen(port);
+	})
 	.catch((err) => console.log(err));

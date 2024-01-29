@@ -23,7 +23,7 @@ exports.login = (req, res, next) => {
 					.status(401)
 					.json({ error: "The email or password entered is incorrect." });
 			} else {
-				res.status(201).json({ user: loadedUser });
+				res.status(201).json({ user: loadedUser, msg: "Login Successful" });
 			}
 		})
 		.catch((err) => res.status(500).json({ err }));
@@ -38,7 +38,9 @@ exports.signUp = (req, res, next) => {
 			const user = new User({ email, password: hashedPw });
 			user
 				.save()
-				.then((result) => res.status(201).json({ user: result }))
+				.then((result) =>
+					res.status(201).json({ user: result, msg: "Signup Successful" })
+				)
 				.catch((err) => res.status(500).json({ err }));
 		})
 		.catch((err) => res.status(500).json({ err }));
