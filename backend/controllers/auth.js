@@ -1,6 +1,8 @@
+require("dotenv").config();
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const salt = 12;
+const jwt = require("jsonwebtoken");
 
 exports.login = (req, res, next) => {
 	const email = req.body.email;
@@ -23,7 +25,10 @@ exports.login = (req, res, next) => {
 					.status(401)
 					.json({ error: "The email or password entered is incorrect." });
 			} else {
-				res.status(201).json({ user: loadedUser, msg: "Login Successful" });
+				const token = jwt.sign({ ...loadedUser }, process.env.SECRET, {
+					expiresIn: "1h",
+				});
+				res.status(201).json({ ...loadedUser, msg: "Login Successful", token });
 			}
 		})
 		.catch((err) => res.status(500).json({ err }));
@@ -38,9 +43,12 @@ exports.signUp = (req, res, next) => {
 			const user = new User({ email, password: hashedPw });
 			user
 				.save()
-				.then((result) =>
-					res.status(201).json({ user: result, msg: "Signup Successful" })
-				)
+				.then((result) => {
+					const token = jwt.sign({ ...loadedUser }, process.env.SECRET, {
+						expiresIn: "1h",
+					});
+					res.status(201).json({ ...result, msg: "Signup Successful", token });
+				})
 				.catch((err) => res.status(500).json({ err }));
 		})
 		.catch((err) => res.status(500).json({ err }));
